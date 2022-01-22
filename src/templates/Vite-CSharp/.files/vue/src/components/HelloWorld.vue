@@ -1,11 +1,21 @@
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
-defineProps({
-  msg: String
-})
-
+defineProps < { msg: string } > ()
 const count = ref(0)
+const forecasts = ref("")
+onMounted(async () => {
+    const getForecasts = async () => {
+        const response = await fetch("api/weatherforecast");
+        if (response.ok) {
+            forecasts.value = await response.text()
+        }
+        else {
+            forecasts.value = response.statusText;
+        }
+    }
+    await getForecasts();
+})
 </script>
 
 <template>
